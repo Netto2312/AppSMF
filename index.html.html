@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMF Calculadora de Servicios</title>
+
+<style>
+body{
+font-family:Arial;
+background:#f2f2f2;
+padding:15px;
+}
+
+.container{
+background:white;
+padding:20px;
+border-radius:10px;
+max-width:420px;
+margin:auto;
+box-shadow:0 0 12px rgba(0,0,0,0.15);
+}
+
+h2{
+text-align:center;
+margin-bottom:10px;
+}
+
+label{
+font-weight:bold;
+}
+
+input,select{
+width:100%;
+padding:8px;
+margin:6px 0 12px 0;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#1f6feb;
+color:white;
+border:none;
+border-radius:6px;
+font-size:16px;
+}
+
+.result{
+margin-top:15px;
+background:#eef3ff;
+padding:12px;
+border-radius:6px;
+font-size:17px;
+}
+
+.table{
+margin-top:20px;
+width:100%;
+border-collapse:collapse;
+}
+
+.table th,.table td{
+border:1px solid #ddd;
+padding:6px;
+text-align:center;
+}
+
+.table th{
+background:#1f6feb;
+color:white;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>SMF Calculadora Servicios</h2>
+
+<label>Sueldo técnico (S/)</label>
+<input id="sueldo" value="3000">
+
+<label>Horas por día</label>
+<select id="horas">
+<option value="8">8</option>
+<option value="10">10</option>
+<option value="12" selected>12</option>
+</select>
+
+<label>Número de técnicos</label>
+<input id="tecnicos" value="1">
+
+<label>Días de trabajo</label>
+<input id="dias" value="1">
+
+<label>Tipo de día</label>
+<select id="tipo">
+<option value="1">Día normal</option>
+<option value="2">Domingo / Feriado</option>
+</select>
+
+<label>Factor costo empresa</label>
+<input id="factor" value="1.5">
+
+<label>Margen empresa (%)</label>
+<input id="margen" value="40">
+
+<button onclick="calcular()">Calcular</button>
+
+<div class="result" id="resultado"></div>
+
+<table class="table">
+<tr>
+<th>Horas</th>
+<th>Precio Técnico</th>
+</tr>
+<tr>
+<td>8</td>
+<td id="p8">-</td>
+</tr>
+<tr>
+<td>10</td>
+<td id="p10">-</td>
+</tr>
+<tr>
+<td>12</td>
+<td id="p12">-</td>
+</tr>
+</table>
+
+</div>
+
+<script>
+
+function calcular(){
+
+let sueldo=parseFloat(document.getElementById("sueldo").value);
+let horas=parseFloat(document.getElementById("horas").value);
+let tecnicos=parseFloat(document.getElementById("tecnicos").value);
+let dias=parseFloat(document.getElementById("dias").value);
+let tipo=parseFloat(document.getElementById("tipo").value);
+let factor=parseFloat(document.getElementById("factor").value);
+let margen=parseFloat(document.getElementById("margen").value)/100;
+
+let costoEmpresa=sueldo*factor;
+let horaEmpresa=costoEmpresa/240;
+
+let costoDia=horaEmpresa*horas;
+
+if(tipo==2){
+costoDia=costoDia*2;
+}
+
+let costoTotal=costoDia*tecnicos*dias;
+let precio=costoTotal*(1+margen);
+let precioHora=precio/(horas*tecnicos*dias);
+
+document.getElementById("resultado").innerHTML=
+"Costo empresa técnico/día: S/ "+costoDia.toFixed(2)+"<br><br>"+
+"Precio total servicio: S/ "+precio.toFixed(2)+"<br><br>"+
+"Precio por hora cliente: S/ "+precioHora.toFixed(2);
+
+function precioHoras(h){
+let c=horaEmpresa*h;
+if(tipo==2){c=c*2;}
+return (c*(1+margen)).toFixed(2);
+}
+
+document.getElementById("p8").innerHTML="S/ "+precioHoras(8);
+document.getElementById("p10").innerHTML="S/ "+precioHoras(10);
+document.getElementById("p12").innerHTML="S/ "+precioHoras(12);
+
+}
+
+</script>
+
+</body>
+</html>
